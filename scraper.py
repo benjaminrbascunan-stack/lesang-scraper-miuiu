@@ -12,10 +12,6 @@ EXCLUIR = [
     "カットソー",
     "oversea",
     "OVERSEA",
-    "オーバーシー",
-    "コピー",
-    "偽物",
-    "激安",
 ]
 
 KEYWORDS = [
@@ -32,6 +28,13 @@ KEYWORDS = [
     "ミュウミュウ ニット",
     "ミュウミュウ パンツ",
     "ミュウミュウ スカート",
+    "ミュウミュウ ハンドバッグ",
+    "ミュウミュウ チェーンバッグ",
+    "ミュウミュウ リュック",
+    "ミュウミュウ ポーチ",
+    "ミュウミュウ コインケース",
+    "miu miu バッグ",
+    "miu miu 財布",
 ]
 
 def animacion_carga(pagina, segundos, mensaje="Cargando"):
@@ -60,7 +63,7 @@ def scrape_keyword(pagina, keyword, vistos, resultados):
         print(f"  ⚠️ No cargó: {e}")
         return
 
-    for _ in range(8):
+    for _ in range(12):
         pagina.mouse.wheel(0, 3000)
         animacion_carga(pagina, 0.7, "Cargando productos")
 
