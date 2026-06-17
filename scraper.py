@@ -3,43 +3,36 @@ import json
 import time
 import sys
 
-# ─────────────────────────────────────────────
-# CONFIGURACIÓN
-# ─────────────────────────────────────────────
-
-# Rango de precio de COMPRA en yenes
-# 2000 ≈ $14.000 CLP  |  14000 ≈ $98.000 CLP (techo para piezas excepcionales)
 PRECIO_MIN = 2000
-PRECIO_MAX = 14000
+PRECIO_MAX = 21000
 
-# Palabras que EXCLUYEN un producto (no valen la pena)
 EXCLUIR = [
-    "Tシャツ",      # camiseta / polera
-    "半袖",         # manga corta
-    "カットソー",    # cut & sew (polera fina)
+    "Tシャツ",
+    "半袖",
+    "カットソー",
+    "oversea",
+    "OVERSEA",
+    "オーバーシー",
+    "コピー",
+    "偽物",
+    "激安",
 ]
 
-# Keywords de búsqueda (Vivienne Westwood)
 KEYWORDS = [
-    # — Bolsos y carteras —
-    "ヴィヴィアンウエストウッド バッグ",        # bag
-    "ヴィヴィアンウエストウッド クラッチ",      # clutch
-    "ヴィヴィアンウエストウッド トートバッグ",   # tote
-    "ヴィヴィアンウエストウッド ショルダー",     # shoulder
-    "ヴィヴィアンウエストウッド オーブ バッグ",   # orb bag
-    # — Ropa —
-    "ヴィヴィアンウエストウッド パーカー",       # hoodie
-    "ヴィヴィアンウエストウッド ニット",         # knit / sweater
-    # — Joyería (alta tasa de réplica: verificar autenticidad) —
-    "ヴィヴィアンウエストウッド ネックレス",     # necklace / collar
-    "ヴィヴィアンウエストウッド ブレスレット",   # bracelet / brazalete
-    "ヴィヴィアンウエストウッド リング",         # ring / anillo
-    "ヴィヴィアンウエストウッド チョーカー",     # choker
+    "ミュウミュウ バッグ",
+    "ミュウミュウ ショルダーバッグ",
+    "ミュウミュウ トートバッグ",
+    "ミュウミュウ クラッチ",
+    "ミュウミュウ マテラッセ",
+    "ミュウミュウ 財布",
+    "ミュウミュウ 長財布",
+    "ミュウミュウ 小銭入れ",
+    "ミュウミュウ キーケース",
+    "ミュウミュウ パーカー",
+    "ミュウミュウ ニット",
+    "ミュウミュウ パンツ",
+    "ミュウミュウ スカート",
 ]
-
-# ─────────────────────────────────────────────
-# FUNCIONES
-# ─────────────────────────────────────────────
 
 def animacion_carga(pagina, segundos, mensaje="Cargando"):
     ciclos = int(segundos / 0.5)
@@ -50,10 +43,8 @@ def animacion_carga(pagina, segundos, mensaje="Cargando"):
         pagina.wait_for_timeout(500)
     sys.stdout.write("\r" + " " * 40 + "\r")
 
-
 def debe_excluir(nombre):
     return any(palabra in nombre for palabra in EXCLUIR)
-
 
 def scrape_keyword(pagina, keyword, vistos, resultados):
     url = (
@@ -69,7 +60,6 @@ def scrape_keyword(pagina, keyword, vistos, resultados):
         print(f"  ⚠️ No cargó: {e}")
         return
 
-    # Scroll para forzar la carga de todos los productos
     for _ in range(8):
         pagina.mouse.wheel(0, 3000)
         animacion_carga(pagina, 0.7, "Cargando productos")
@@ -89,7 +79,6 @@ def scrape_keyword(pagina, keyword, vistos, resultados):
             nombre_el = item.query_selector('span[data-testid="thumbnail-item-name"]')
             nombre = nombre_el.inner_text() if nombre_el else "Sin nombre"
 
-            # Filtro de exclusión (poleras, etc.)
             if debe_excluir(nombre):
                 excluidos += 1
                 vistos.add(url_producto)
@@ -117,7 +106,6 @@ def scrape_keyword(pagina, keyword, vistos, resultados):
 
     print(f"  ✅ Agregados: {nuevos}  ❌ Excluidos: {excluidos}  (Total: {len(resultados)})")
 
-
 def buscar_mercari(keywords):
     resultados = []
     vistos = set()
@@ -126,18 +114,13 @@ def buscar_mercari(keywords):
         pagina = navegador.new_page()
         for kw in keywords:
             scrape_keyword(pagina, kw, vistos, resultados)
-            time.sleep(2)  # pausa humana entre búsquedas
+            time.sleep(2)
         navegador.close()
     return resultados
 
-
-# ─────────────────────────────────────────────
-# EJECUCIÓN
-# ─────────────────────────────────────────────
-
 if __name__ == "__main__":
     print("=" * 50)
-    print("DIGGER LÉ SANG — Scraper Mercari")
+    print("DIGGER LÉ SANG — Scraper Miu Miu")
     print(f"Rango de compra: ¥{PRECIO_MIN} – ¥{PRECIO_MAX}")
     print("=" * 50)
 
